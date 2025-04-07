@@ -25,12 +25,64 @@ router.post('/', async (req, res, next) => {
 
     const newUser = await prisma.user.create({
       data: { 
-        email: req.body.name // extra!!
+        email: req.body.email, // extra!!
+        name: req.body.name,
+        password: req.body.password
       }
     });
   
     res.json(newUser);
   }
 
-})
+});
+
+// PUT update an existing user
+router.put('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const { email, name, password } = req.body;
+
+  // Check if user exists
+  const existingUser = await prisma.user.findUnique({
+    where: { id: Number(id) }
+  });
+
+  if (!existingUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Update the user
+  const updatedUser = await prisma.user.update({
+    where: { id: Number(id) },
+    data: {
+      email: email || existingUser.email, // Only update if new value is provided
+      name: name || existingUser.name,
+      password: password || existingUser.password
+    }
+  });
+
+  res.json(updatedUser);
+});
+
+// DELETE a user
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+
+  // Check if user exists
+  const existingUser = await prisma.user.findUnique({
+    where: { id: Number(id) }
+  });
+
+  if (!existingUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Delete the user
+  await prisma.user.delete({
+    where: { id: Number(id) }
+  });
+
+  res.json({ message: "User deleted successfully" });
+});
+
+
 module.exports = router;

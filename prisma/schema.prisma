@@ -10,11 +10,12 @@ datasource db {
 model amenities {
   amenitie_id     Int               @id
   name            String            @db.VarChar(255)
-  amenities_spots amenities_spots[] @ignore
+  amenities_spots amenities_spots[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model amenities_spots {
+  amenitie_spot_id           Int     @id @default(autoincrement())
   amenitie_id  Int?
   spot_id      Int?
   amenities    amenities?    @relation(fields: [amenitie_id], references: [amenitie_id], onDelete: NoAction, onUpdate: NoAction, map: "amenities_spots_ibfk_1")
@@ -22,7 +23,7 @@ model amenities_spots {
 
   @@index([amenitie_id], map: "amenitie_id")
   @@index([spot_id], map: "spot_id")
-  @@ignore
+  
 }
 
 model booking {
@@ -55,7 +56,7 @@ model camping_spot {
   created         DateTime          @db.Date
   description     String?           @db.VarChar(255)
   base_price      Decimal           @db.Decimal(10, 2)
-  amenities_spots amenities_spots[] @ignore
+  amenities_spots amenities_spots[]
   booking         booking[]
   user            user?             @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_1")
   country         country?          @relation(fields: [country_id], references: [country_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_2")
@@ -136,7 +137,7 @@ model user {
   name           String           @db.VarChar(255)
   email          String           @unique(map: "email") @db.VarChar(255)
   password       String           @db.VarChar(255)
-  created        DateTime         @db.Date
+  created        DateTime         @db.Date //createdAt DateTime @default(now())
   booking        booking[]
   camping_spot   camping_spot[]
   favorites      favorites[]
