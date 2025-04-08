@@ -5,10 +5,43 @@ const prisma = new PrismaClient();
 
 // GET users listing.
 router.get('/', async function(req, res, next) {
-  const data = await prisma.user.findMany();
+  const data = await prisma.user.findMany({
+    include: {   
+      favorites: true,
+      review: true,
+      booking: true,
+      camping_spot: true
+
+
+    }});
   res.json(data);
 });
 
+
+// GET user by id
+router.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { user_id: Number(id) },
+      include: {
+        camping_spot: true, 
+        favorites: true,
+        review: true,
+        booking: true
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // POST create a new user
 router.post('/', async (req, res, next) => {
@@ -54,9 +87,9 @@ router.put('/:id', async (req, res, next) => {
   const updatedUser = await prisma.user.update({
     where: { id: Number(id) },
     data: {
-      email: email || existingUser.email, // Only update if new value is provided
-      name: name || existingUser.name,
-      password: password || existingUser.password
+      email: email ?? existingUser.email, // Only update if new value is provided
+      name: name ?? existingUser.name,
+      password: password ?? existingUser.password // This only falls back to existing.password if the new value is null or undefined — perfect for updates!
     }
   });
 
