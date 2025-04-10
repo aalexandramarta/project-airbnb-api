@@ -12,7 +12,8 @@ router.get('/', async function(req, res, next) {
           city: true,        // Include city
           pictures: true,
           booking: true,
-          review: true
+          review: true,
+          amenities_spots: true
 
         }
     })
@@ -33,7 +34,8 @@ router.get('/:id', async (req, res, next) => {
           city: true,
           pictures: true,
           booking: true,
-          review: true
+          review: true,
+          amenities_spots: true
         }
       });
   
@@ -58,10 +60,10 @@ data: {
     location: req.body.location,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
-    created: req.body.created, // or `new Date()` ?
+    created: req.body.created ? new Date(req.body.created) : new Date(), // automatic
     description: req.body.description,
     base_price: req.body.base_price
-}
+} 
 });
 
     res.json(newSpot);

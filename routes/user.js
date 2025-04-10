@@ -76,7 +76,7 @@ router.put('/:id', async (req, res, next) => {
 
   // Check if user exists
   const existingUser = await prisma.user.findUnique({
-    where: { id: Number(id) }
+    where: { user_id: Number(id) }
   });
 
   if (!existingUser) {
@@ -85,7 +85,7 @@ router.put('/:id', async (req, res, next) => {
 
   // Update the user
   const updatedUser = await prisma.user.update({
-    where: { id: Number(id) },
+    where: { user_id: Number(id) },
     data: {
       email: email ?? existingUser.email, // Only update if new value is provided
       name: name ?? existingUser.name,
@@ -102,7 +102,7 @@ router.delete('/:id', async (req, res, next) => {
 
   // Check if user exists
   const existingUser = await prisma.user.findUnique({
-    where: { id: Number(id) }
+    where: { user_id: Number(id) }
   });
 
   if (!existingUser) {
@@ -111,7 +111,7 @@ router.delete('/:id', async (req, res, next) => {
 
   // Delete the user
   await prisma.user.delete({
-    where: { id: Number(id) }
+    where: { user_id: Number(id) }
   });
 
   res.json({ message: "User deleted successfully" });
@@ -119,3 +119,4 @@ router.delete('/:id', async (req, res, next) => {
 
 
 module.exports = router;
+

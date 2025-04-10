@@ -8,26 +8,25 @@ datasource db {
 }
 
 model amenities {
-  amenitie_id     Int               @id
+  amenitie_id     Int               @id @default(autoincrement())
   name            String            @db.VarChar(255)
   amenities_spots amenities_spots[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model amenities_spots {
-  amenitie_spot_id           Int     @id @default(autoincrement())
-  amenitie_id  Int?
-  spot_id      Int?
-  amenities    amenities?    @relation(fields: [amenitie_id], references: [amenitie_id], onDelete: NoAction, onUpdate: NoAction, map: "amenities_spots_ibfk_1")
-  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: NoAction, onUpdate: NoAction, map: "amenities_spots_ibfk_2")
+  amenitie_spot_id Int           @id @default(autoincrement())
+  amenitie_id      Int?
+  spot_id          Int?
+  amenities        amenities?    @relation(fields: [amenitie_id], references: [amenitie_id], onDelete: NoAction, onUpdate: NoAction, map: "amenities_spots_ibfk_1")
+  camping_spot     camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "amenities_spots_ibfk_2")
 
   @@index([amenitie_id], map: "amenitie_id")
   @@index([spot_id], map: "spot_id")
-  
 }
 
 model booking {
-  booking_id   Int           @id
+  booking_id   Int           @id @default(autoincrement())
   spot_id      Int?
   user_id      Int?
   start_date   DateTime      @db.Date
@@ -35,8 +34,8 @@ model booking {
   status_id    Int?
   price        Decimal       @db.Decimal(10, 2)
   created      DateTime      @db.Date
-  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_ibfk_1")
-  user         user?         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_ibfk_2")
+  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "booking_ibfk_1")
+  user         user?         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "booking_ibfk_2")
   status       status?       @relation(fields: [status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_ibfk_3")
 
   @@index([spot_id], map: "spot_id")
@@ -45,7 +44,7 @@ model booking {
 }
 
 model camping_spot {
-  spot_id         Int               @id
+  spot_id         Int               @id @default(autoincrement())
   user_id         Int?
   country_id      Int?
   city_id         Int?
@@ -58,7 +57,7 @@ model camping_spot {
   base_price      Decimal           @db.Decimal(10, 2)
   amenities_spots amenities_spots[]
   booking         booking[]
-  user            user?             @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_1")
+  user            user?             @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "camping_spot_ibfk_1")
   country         country?          @relation(fields: [country_id], references: [country_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_2")
   city            city?             @relation(fields: [city_id], references: [city_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_3")
   favorites       favorites[]
@@ -71,40 +70,40 @@ model camping_spot {
 }
 
 model city {
-  city_id      Int            @id
+  city_id      Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
   camping_spot camping_spot[]
 }
 
 model country {
-  country_id   Int            @id
+  country_id   Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
   camping_spot camping_spot[]
 }
 
 model favorites {
-  favorite_id  Int           @id
+  favorite_id  Int           @id @default(autoincrement())
   spot_id      Int?
   user_id      Int?
-  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: NoAction, onUpdate: NoAction, map: "favorites_ibfk_1")
-  user         user?         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "favorites_ibfk_2")
+  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "favorites_ibfk_1")
+  user         user?         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "favorites_ibfk_2")
 
   @@index([spot_id], map: "spot_id")
   @@index([user_id], map: "user_id")
 }
 
 model password_reset {
-  reset_id    Int      @id
+  reset_id    Int      @id @default(autoincrement())
   user_id     Int?
   reset_token String   @db.VarChar(255)
   expire_time DateTime @db.Timestamp(0)
-  user        user?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "password_reset_ibfk_1")
+  user        user?    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "password_reset_ibfk_1")
 
   @@index([user_id], map: "user_id")
 }
 
 model pictures {
-  picture_id   Int          @id
+  picture_id   Int          @id @default(autoincrement())
   url          String       @db.Text
   spot_id      Int          @unique(map: "spot_id")
   uploaded_at  DateTime?    @default(now()) @db.Timestamp(0)
@@ -113,31 +112,31 @@ model pictures {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model review {
-  review_id    Int           @id
+  review_id    Int           @id @default(autoincrement())
   spot_id      Int?
   user_id      Int?
   rating       Int?
   comment      String?       @db.Text
   created      DateTime      @db.Date
-  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
-  user         user?         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
+  camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "review_ibfk_1")
+  user         user?         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "review_ibfk_2")
 
   @@index([spot_id], map: "spot_id")
   @@index([user_id], map: "user_id")
 }
 
 model status {
-  status_id Int       @id
+  status_id Int       @id @default(autoincrement())
   name      String    @db.VarChar(255)
   booking   booking[]
 }
 
 model user {
-  user_id        Int              @id
+  user_id        Int              @id @default(autoincrement())
   name           String           @db.VarChar(255)
   email          String           @unique(map: "email") @db.VarChar(255)
   password       String           @db.VarChar(255)
-  created        DateTime         @db.Date //createdAt DateTime @default(now())
+  created        DateTime         @db.Date
   booking        booking[]
   camping_spot   camping_spot[]
   favorites      favorites[]

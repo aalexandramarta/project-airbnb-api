@@ -22,10 +22,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //routing
-var indexRouter = require('./routes/index');
-var userRouter = require('./routes/user');
-var spotRouter = require('./routes/spot');
-var favoriteRouter = require('./routes/favorite');
+const indexRouter = require('./routes/index');
+const userRouter = require('./routes/user');
+const spotRouter = require('./routes/spot');
+const favoriteRouter = require('./routes/favorite');
+const bookingRouter = require('./routes/booking');
+const amenitieRouter = require('./routes/amenitie');
 
 
 
@@ -34,7 +36,8 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/spot', spotRouter);
 app.use('/favorite', favoriteRouter);
-
+app.use('/booking', bookingRouter);
+app.use('/amenitie', amenitieRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

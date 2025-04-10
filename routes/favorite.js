@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 // POST create a new favorite
 router.post('/', async (req, res, next) => {
+  try {
 const newFavorite = await prisma.favorites.create({
 data: { 
     user_id: req.body.user_id,
@@ -15,6 +16,10 @@ data: {
 });
 
     res.json(newFavorite);
+  } catch (error) {
+    console.error(error);  // Log any error in the server logs
+    next(error);  // Pass the error to the next error handler
+  }
 });
 
 
@@ -34,7 +39,7 @@ data: {
   
       // Delete the favorite
       await prisma.favorites.delete({
-        where: { favorite_id_id: Number(id) }
+        where: { favorite_id: Number(id) }
       });
   
       res.json({ message: "Favorite spot deleted successfully" });
