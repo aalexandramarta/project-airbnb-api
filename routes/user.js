@@ -69,6 +69,34 @@ router.post('/', async (req, res, next) => {
 
 });
 
+//Check user at login
+router.post('/login', async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email,
+        password 
+      },
+      include: {
+        favorites: true,
+        review: true,
+        booking: true,
+        camping_spot: true
+      }
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // PUT update an existing user
 router.put('/:id', async (req, res, next) => {
   const { id } = req.params;
