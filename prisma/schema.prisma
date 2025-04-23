@@ -33,7 +33,7 @@ model booking {
   end_date     DateTime      @db.Date
   status_id    Int?
   price        Decimal       @db.Decimal(10, 2)
-  created      DateTime      @db.Date
+  created      DateTime      @default(now())
   camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "booking_ibfk_1")
   user         user?         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "booking_ibfk_2")
   status       status?       @relation(fields: [status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction, map: "booking_ibfk_3")
@@ -52,7 +52,7 @@ model camping_spot {
   location        String?           @db.VarChar(255)
   latitude        Decimal?          @db.Decimal(10, 8)
   longitude       Decimal?          @db.Decimal(11, 8)
-  created         DateTime          @db.Date
+  created         DateTime          @default(now())
   description     String?           @db.VarChar(255)
   base_price      Decimal           @db.Decimal(10, 2)
   amenities_spots amenities_spots[]
@@ -117,7 +117,7 @@ model review {
   user_id      Int?
   rating       Int?
   comment      String?       @db.Text
-  created      DateTime      @db.Date
+  created      DateTime      @default(now())
   camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "review_ibfk_1")
   user         user?         @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "review_ibfk_2")
 

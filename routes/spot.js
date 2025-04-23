@@ -35,7 +35,11 @@ router.get('/:id', async (req, res, next) => {
           pictures: true,
           booking: true,
           review: true,
-          amenities_spots: true
+          amenities_spots: {
+            include: {
+              amenity: true // this includes the actual amenity details
+            }
+          }
         }
       });
   
