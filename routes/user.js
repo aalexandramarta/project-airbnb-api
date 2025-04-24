@@ -27,9 +27,13 @@ router.get('/:id', async (req, res, next) => {
       where: { user_id: Number(id) },
       include: {
         camping_spot: true, 
-        favorites: true,
-        review: true,
-        booking: true
+        favorites: {
+            include: {
+              camping_spot: {include: {amenities_spots: {include: {amenities: true}}}}
+            }
+        },
+        review: {include: {camping_spot: true}},
+        booking: {include: {camping_spot: true}}
       }
     });
 
@@ -80,9 +84,9 @@ router.post('/login', async (req, res, next) => {
         password 
       },
       include: {
-        favorites: true,
-        review: true,
-        booking: true,
+        favorites:{include: {camping_spot: {include: {amenities_spots: {include: {amenities: true}}}}}},
+        review: {include: {camping_spot: true}},
+        booking: {include: {camping_spot: true}},
         camping_spot: true
       }
     });
