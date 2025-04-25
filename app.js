@@ -28,7 +28,8 @@ const spotRouter = require('./routes/spot');
 const favoriteRouter = require('./routes/favorite');
 const bookingRouter = require('./routes/booking');
 const amenitieRouter = require('./routes/amenitie');
-
+const countryRouter = require('./routes/country');
+const cityRouter = require('./routes/city');
 
 
 
@@ -38,6 +39,8 @@ app.use('/spot', spotRouter);
 app.use('/favorite', favoriteRouter);
 app.use('/booking', bookingRouter);
 app.use('/amenitie', amenitieRouter);
+app.use('/country', countryRouter);
+app.use('/city', cityRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

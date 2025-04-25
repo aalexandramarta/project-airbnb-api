@@ -72,6 +72,8 @@ model camping_spot {
 model city {
   city_id      Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
+  country_id   Int?            
+  country      country?        @relation(fields: [country_id], references: [country_id]) 
   camping_spot camping_spot[]
 }
 
@@ -79,6 +81,7 @@ model country {
   country_id   Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
   camping_spot camping_spot[]
+  city     city[]
 }
 
 model favorites {
