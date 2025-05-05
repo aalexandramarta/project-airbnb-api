@@ -9,7 +9,7 @@ datasource db {
 
 model amenities {
   amenitie_id     Int               @id @default(autoincrement())
-  name            String            @db.VarChar(255)
+  name            String            @unique @db.VarChar(255)
   amenities_spots amenities_spots[]
 }
 
@@ -61,7 +61,7 @@ model camping_spot {
   country         country?          @relation(fields: [country_id], references: [country_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_2")
   city            city?             @relation(fields: [city_id], references: [city_id], onDelete: NoAction, onUpdate: NoAction, map: "camping_spot_ibfk_3")
   favorites       favorites[]
-  pictures        pictures?
+  pictures        pictures[]
   review          review[]
 
   @@index([city_id], map: "city_id")
@@ -71,7 +71,7 @@ model camping_spot {
 
 model city {
   city_id      Int            @id @default(autoincrement())
-  name         String         @db.VarChar(255)
+  name         String         @unique
   country_id   Int?            
   country      country?        @relation(fields: [country_id], references: [country_id]) 
   camping_spot camping_spot[]
@@ -79,7 +79,7 @@ model city {
 
 model country {
   country_id   Int            @id @default(autoincrement())
-  name         String         @db.VarChar(255)
+  name         String         @unique
   camping_spot camping_spot[]
   city     city[]
 }
@@ -107,18 +107,20 @@ model password_reset {
 
 model pictures {
   picture_id   Int          @id @default(autoincrement())
-  url          String       @db.Text
-  spot_id      Int          @unique(map: "spot_id")
+  url          String       @db.LongText
+  spot_id      Int          
   uploaded_at  DateTime?    @default(now()) @db.Timestamp(0)
   camping_spot camping_spot @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "pictures_ibfk_1")
+
+  @@index([spot_id])
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model review {
   review_id    Int           @id @default(autoincrement())
-  spot_id      Int?
-  user_id      Int?
-  rating       Int?
+  spot_id      Int
+  user_id      Int
+  rating       Int
   comment      String?       @db.Text
   created      DateTime      @default(now())
   camping_spot camping_spot? @relation(fields: [spot_id], references: [spot_id], onDelete: Cascade, onUpdate: NoAction, map: "review_ibfk_1")
@@ -126,6 +128,7 @@ model review {
 
   @@index([spot_id], map: "spot_id")
   @@index([user_id], map: "user_id")
+  @@unique([spot_id, user_id], name: "one_review_per_user_per_spot")
 }
 
 model status {
