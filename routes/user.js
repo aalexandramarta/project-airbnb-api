@@ -32,7 +32,7 @@ router.get('/:id', async (req, res, next) => {
               camping_spot: {include: {amenities_spots: {include: {amenities: true}}}}
             }
         },
-        review: {include: {camping_spot: true}},
+        review: {include: {camping_spot: true, user: true }},
         booking: {include: {camping_spot: { include: { pictures: true, user: true }}}
         }
       }
