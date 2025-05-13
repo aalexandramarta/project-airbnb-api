@@ -29,8 +29,8 @@ model booking {
   booking_id   Int           @id @default(autoincrement())
   spot_id      Int?
   user_id      Int?
-  start_date   DateTime      @db.Date
-  end_date     DateTime      @db.Date
+  start_date   DateTime      
+  end_date     DateTime      
   status_id    Int?
   price        Decimal       @db.Decimal(10, 2)
   created      DateTime      @default(now())

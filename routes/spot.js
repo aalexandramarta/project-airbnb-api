@@ -40,7 +40,10 @@ router.get('/:id', async (req, res, next) => {
           booking: {include: {user: true}},
           review: { include: { user: true } },
           amenities_spots: {
-            include: {amenities: true}}}
+            include: {amenities: true}
+          },
+          favorites: true
+        }
       });
   
       if (!spot) {
