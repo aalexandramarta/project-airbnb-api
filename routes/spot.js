@@ -42,7 +42,7 @@ router.get('/:id', async (req, res, next) => {
           amenities_spots: {
             include: {amenities: true}
           },
-          favorites: true
+          favorites: {include: {camping_spot : {include: {pictures: true}}}}
         }
       });
   

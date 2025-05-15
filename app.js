@@ -31,6 +31,7 @@ const amenitieRouter = require('./routes/amenitie');
 const countryRouter = require('./routes/country');
 const cityRouter = require('./routes/city');
 const reviewRouter = require('./routes/review');
+const passwordResetRouter = require('./routes/password-reset');
 
 
 
@@ -44,6 +45,7 @@ app.use('/amenitie', amenitieRouter);
 app.use('/country', countryRouter);
 app.use('/city', cityRouter);
 app.use('/review', reviewRouter);
+app.use('/password-reset', passwordResetRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
