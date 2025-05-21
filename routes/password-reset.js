@@ -27,7 +27,7 @@ router.post('/request', async (req, res) => {
 
   const resetLink = `http://localhost:8080/reset-password?token=${resetToken}`;
 
-  // Send email (adjust transporter config to your email service)
+  // Send email from my personal email using app password
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {

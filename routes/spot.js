@@ -110,7 +110,7 @@ router.put('/:id', async (req, res, next) => {
       }))
     });
 
-    // finally update the scalar fields
+    // finally update the other fields
     const updated = await prisma.camping_spot.update({
       where: { spot_id: spotId },
       data: {
@@ -154,7 +154,7 @@ router.put('/:id', async (req, res, next) => {
   
       res.json({ message: "Camping spot deleted successfully" });
     } catch (error) {
-      next(error); // Let Express handle errors
+      next(error); //  Express handling errors
     }
   });
   

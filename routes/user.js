@@ -26,14 +26,14 @@ router.get('/:id', async (req, res, next) => {
     const user = await prisma.user.findUnique({
       where: { user_id: Number(id) },
       include: {
-        camping_spot: true, 
+        camping_spot: {include: {pictures: true}}, 
         favorites: {
             include: {
               camping_spot: {include: {pictures: true, amenities_spots: {include: {amenities: true}}}}
             }
         },
         review: {include: {camping_spot: true, user: true }},
-        booking: {include: {camping_spot: { include: { pictures: true, user: true }}}
+        booking: {include: {camping_spot: { include: { pictures: true, user: true, country: true, city:true }}}
         }
       }
     });
@@ -122,7 +122,7 @@ router.put('/:id', async (req, res, next) => {
     data: {
       email: email ?? existingUser.email, // Only update if new value is provided
       name: name ?? existingUser.name,
-      password: password ?? existingUser.password // This only falls back to existing.password if the new value is null or undefined — perfect for updates!
+      //password: password ?? existingUser.password // This only falls back to existing.password if the new value is null or undefined — perfect for updates!
     }
   });
 
